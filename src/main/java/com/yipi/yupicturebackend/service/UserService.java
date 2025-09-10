@@ -1,6 +1,6 @@
 package com.yipi.yupicturebackend.service;
 
-import com.yipi.yupicturebackend.domain.User;
+import com.yipi.yupicturebackend.model.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -10,4 +10,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
 */
 public interface UserService extends IService<User> {
 
+    long userRegister(String userAccount, String userPassword, String checkPassword);
 }

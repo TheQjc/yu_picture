@@ -1,6 +1,6 @@
 package com.yipi.yupicturebackend.mapper;
 
-import com.yipi.yupicturebackend.domain.User;
+import com.yipi.yupicturebackend.model.entity.User;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**

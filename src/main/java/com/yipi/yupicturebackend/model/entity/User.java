@@ -1,4 +1,4 @@
-package com.yipi.yupicturebackend.domain;
+package com.yipi.yupicturebackend.model.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
 
