@@ -7,10 +7,17 @@ import com.yipi.yupicturebackend.exception.BusinessException;
 import com.yipi.yupicturebackend.exception.ErrorCode;
 import com.yipi.yupicturebackend.model.entity.User;
 import com.yipi.yupicturebackend.model.enums.UserRoleEnum;
+import com.yipi.yupicturebackend.model.vo.LoginUserVO;
 import com.yipi.yupicturebackend.service.UserService;
 import com.yipi.yupicturebackend.mapper.UserMapper;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
+
+import javax.servlet.http.HttpServletRequest;
+
+import static com.yipi.yupicturebackend.constant.UserConstant.USER_LOGIN_STATE;
 
 /**
 * @author 30637
@@ -18,6 +25,7 @@ import org.springframework.util.DigestUtils;
 * @createDate 2025-09-09 23:25:22
 */
 @Service
+@Slf4j
 public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     implements UserService{
 
@@ -57,6 +65,45 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         }
         return user.getId();
     }
+
+    @Override
+    public LoginUserVO userLogin(String userAccount, String userPassword, HttpServletRequest request) {
+
+        if (StrUtil.hasBlank(userAccount, userPassword)) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "参数为空");
+        }
+        if (userAccount.length() < 4) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "账号错误");
+        }
+        if (userPassword.length() < 8) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "密码错误");
+        }
+
+        String encryptPassword = getEncryptPassword(userPassword);
+
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("userAccount", userAccount);
+        queryWrapper.eq("userPassword", encryptPassword);
+        User user = this.baseMapper.selectOne(queryWrapper);
+
+        if (user == null) {
+            log.info("user login failed, userAccount cannot match userPassword");
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "用户不存在或密码错误");
+        }
+
+        request.getSession().setAttribute(USER_LOGIN_STATE, user);
+        return this.getLoginUserVO(user);
+    }
+
+    public LoginUserVO getLoginUserVO(User user) {
+        if (user == null) {
+            return null;
+        }
+        LoginUserVO loginUserVO = new LoginUserVO();
+        BeanUtils.copyProperties(user, loginUserVO);
+        return loginUserVO;
+    }
+
 
     public String getEncryptPassword(String userPassword) {
 

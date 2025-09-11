@@ -1,1 +1,16 @@
-D:\work\Cloud-Image-Library\yu-picture-backend\src\main\java\com\yipi\yupicturebackend\YuPictureBackendApplication.java
+D:\work\Cloud_Library_Image\yu_picture\src\main\java\com\yipi\yupicturebackend\controller\UserController.java
+D:\work\Cloud_Library_Image\yu_picture\src\main\java\com\yipi\yupicturebackend\exception\ThrowUtils.java
+D:\work\Cloud_Library_Image\yu_picture\src\main\java\com\yipi\yupicturebackend\common\BaseResponse.java
+D:\work\Cloud_Library_Image\yu_picture\src\main\java\com\yipi\yupicturebackend\mapper\UserMapper.java
+D:\work\Cloud_Library_Image\yu_picture\src\main\java\com\yipi\yupicturebackend\model\entity\User.java
+D:\work\Cloud_Library_Image\yu_picture\src\main\java\com\yipi\yupicturebackend\common\DeleteRequest.java
+D:\work\Cloud_Library_Image\yu_picture\src\main\java\com\yipi\yupicturebackend\YuPictureBackendApplication.java
+D:\work\Cloud_Library_Image\yu_picture\src\main\java\com\yipi\yupicturebackend\common\ResultUtils.java
+D:\work\Cloud_Library_Image\yu_picture\src\main\java\com\yipi\yupicturebackend\model\dto\user\UserRegisterRequest.java
+D:\work\Cloud_Library_Image\yu_picture\src\main\java\com\yipi\yupicturebackend\service\impl\UserServiceImpl.java
+D:\work\Cloud_Library_Image\yu_picture\src\main\java\com\yipi\yupicturebackend\model\enums\UserRoleEnum.java
+D:\work\Cloud_Library_Image\yu_picture\src\main\java\com\yipi\yupicturebackend\exception\BusinessException.java
+D:\work\Cloud_Library_Image\yu_picture\src\main\java\com\yipi\yupicturebackend\common\PageRequest.java
+D:\work\Cloud_Library_Image\yu_picture\src\main\java\com\yipi\yupicturebackend\exception\ErrorCode.java
+D:\work\Cloud_Library_Image\yu_picture\src\main\java\com\yipi\yupicturebackend\exception\GlobalExceptionHandler.java
+D:\work\Cloud_Library_Image\yu_picture\src\main\java\com\yipi\yupicturebackend\service\UserService.java

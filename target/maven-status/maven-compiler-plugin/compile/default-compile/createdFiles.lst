@@ -1,1 +1,16 @@
+com\yipi\yupicturebackend\common\PageRequest.class
+com\yipi\yupicturebackend\common\DeleteRequest.class
+com\yipi\yupicturebackend\common\ResultUtils.class
+com\yipi\yupicturebackend\exception\GlobalExceptionHandler.class
+com\yipi\yupicturebackend\model\entity\User.class
+com\yipi\yupicturebackend\model\enums\UserRoleEnum.class
 com\yipi\yupicturebackend\YuPictureBackendApplication.class
+com\yipi\yupicturebackend\exception\ThrowUtils.class
+com\yipi\yupicturebackend\exception\ErrorCode.class
+com\yipi\yupicturebackend\mapper\UserMapper.class
+com\yipi\yupicturebackend\exception\BusinessException.class
+com\yipi\yupicturebackend\model\dto\user\UserRegisterRequest.class
+com\yipi\yupicturebackend\common\BaseResponse.class
+com\yipi\yupicturebackend\service\impl\UserServiceImpl.class
+com\yipi\yupicturebackend\controller\UserController.class
+com\yipi\yupicturebackend\service\UserService.class
