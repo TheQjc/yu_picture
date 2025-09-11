@@ -3,6 +3,7 @@ package com.yipi.yupicturebackend.service.impl;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.yipi.yupicturebackend.constant.UserConstant;
 import com.yipi.yupicturebackend.exception.BusinessException;
 import com.yipi.yupicturebackend.exception.ErrorCode;
 import com.yipi.yupicturebackend.model.entity.User;
@@ -93,6 +94,35 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
 
         request.getSession().setAttribute(USER_LOGIN_STATE, user);
         return this.getLoginUserVO(user);
+    }
+
+    @Override
+    public boolean userLogout(HttpServletRequest request) {
+
+        Object userObj = request.getSession().getAttribute(USER_LOGIN_STATE);
+        if (userObj == null) {
+            throw new BusinessException(ErrorCode.OPERATION_ERROR, "未登录");
+        }
+
+        request.getSession().removeAttribute(USER_LOGIN_STATE);
+        return true;
+    }
+
+    @Override
+    public User getLoginUser(HttpServletRequest request) {
+        // 判断是否已经登录
+        Object userObj = request.getSession().getAttribute(UserConstant.USER_LOGIN_STATE);
+        User currentUser = (User) userObj;
+        if (currentUser == null || currentUser.getId() == null) {
+            throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR);
+        }
+        // 从数据库中查询（追求性能的话可以注释，直接返回上述结果）
+        Long userId = currentUser.getId();
+        currentUser = this.getById(userId);
+        if (currentUser == null) {
+            throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR);
+        }
+        return currentUser;
     }
 
     public LoginUserVO getLoginUserVO(User user) {
