@@ -1,10 +1,14 @@
 package com.yipi.yupicturebackend.service;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.yipi.yupicturebackend.model.dto.user.UserQueryRequest;
 import com.yipi.yupicturebackend.model.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.yipi.yupicturebackend.model.vo.LoginUserVO;
+import com.yipi.yupicturebackend.model.vo.UserVO;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
 * @author 30637
@@ -20,4 +24,12 @@ public interface UserService extends IService<User> {
     boolean userLogout(HttpServletRequest request);
 
     User getLoginUser(HttpServletRequest request);
+
+    String getEncryptPassword(String defaultPassword);
+
+    UserVO getUserVO(User user);
+
+    Wrapper<User> getQueryWrapper(UserQueryRequest userQueryRequest);
+
+    List<UserVO> getUserVOList(List<User> records);
 }
