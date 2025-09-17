@@ -32,4 +32,6 @@ public interface UserService extends IService<User> {
     Wrapper<User> getQueryWrapper(UserQueryRequest userQueryRequest);
 
     List<UserVO> getUserVOList(List<User> records);
+
+    boolean isAdmin(User loginUser);
 }

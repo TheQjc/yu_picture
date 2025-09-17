@@ -6,7 +6,7 @@ import lombok.Data;
  * 通用的分页请求类
  */
 @Data
-public class PageRequest {
+public class  PageRequest {
 
     /**
      * 当前页号
