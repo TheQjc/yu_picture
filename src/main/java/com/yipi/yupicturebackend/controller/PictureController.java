@@ -15,6 +15,7 @@ import com.yipi.yupicturebackend.exception.ThrowUtils;
 import com.yipi.yupicturebackend.model.dto.picture.PictureEditRequest;
 import com.yipi.yupicturebackend.model.dto.picture.PictureQueryRequest;
 import com.yipi.yupicturebackend.model.dto.picture.PictureUpdateRequest;
+import com.yipi.yupicturebackend.model.dto.picture.PictureUploadRequest;
 import com.yipi.yupicturebackend.model.entity.Picture;
 import com.yipi.yupicturebackend.model.entity.User;
 import com.yipi.yupicturebackend.model.vo.PictureTagCategory;
@@ -50,6 +51,16 @@ public class PictureController {
     @Resource
     private PictureService pictureService;
 
+    @PostMapping("/upload")
+    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
+    public BaseResponse<PictureVO> uploadPicture(
+            @RequestPart("file") MultipartFile multipartFile,
+            PictureUploadRequest pictureUploadRequest,
+            HttpServletRequest request) {
+        User loginUser = userService.getLoginUser(request);
+        PictureVO pictureVO = pictureService.uploadPicture(multipartFile, pictureUploadRequest, loginUser);
+        return ResultUtils.success(pictureVO);
+    }
 
     @PostMapping("/delete")
     public BaseResponse<Boolean> deletePicture(@RequestBody DeleteRequest deleteRequest, HttpServletRequest request) {

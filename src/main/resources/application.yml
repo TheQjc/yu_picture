@@ -15,7 +15,9 @@ spring:
       url: jdbc:mysql://${yu.datasource.host}:${yu.datasource.port}/${yu.datasource.database}?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
       username: ${yu.datasource.username}
       password: ${yu.datasource.password}
-
+  servlet:
+    multipart:
+      max-file-size: 10MB
 mybatis-plus:
   configuration:
     # MyBatis 配置
@@ -38,4 +40,4 @@ knife4j:
       default:
         api-rule: package
         api-rule-resources:
-          - com.yipi.yipicturebackend.controller
+          - com.yipi.yupicturebackend.controller

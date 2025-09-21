@@ -9,7 +9,10 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yipi.yupicturebackend.exception.ErrorCode;
 import com.yipi.yupicturebackend.exception.ThrowUtils;
+import com.yipi.yupicturebackend.manager.FileManager;
+import com.yipi.yupicturebackend.model.dto.file.UploadPictureResult;
 import com.yipi.yupicturebackend.model.dto.picture.PictureQueryRequest;
+import com.yipi.yupicturebackend.model.dto.picture.PictureUploadRequest;
 import com.yipi.yupicturebackend.model.entity.Picture;
 import com.yipi.yupicturebackend.model.entity.User;
 import com.yipi.yupicturebackend.model.vo.PictureVO;
@@ -18,9 +21,11 @@ import com.yipi.yupicturebackend.service.PictureService;
 import com.yipi.yupicturebackend.mapper.PictureMapper;
 import com.yipi.yupicturebackend.service.UserService;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -37,6 +42,8 @@ public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture>
 
     @Resource
     private UserService userService;
+    @Resource
+    private FileManager fileManager;
     public QueryWrapper<Picture> getQueryWrapper(PictureQueryRequest pictureQueryRequest) {
         QueryWrapper<Picture> queryWrapper = new QueryWrapper<>();
         if (pictureQueryRequest == null) {
@@ -110,6 +117,46 @@ public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture>
         });
         pictureVOPage.setRecords(pictureVOList);
         return pictureVOPage;
+    }
+
+    @Override
+    public PictureVO uploadPicture(MultipartFile multipartFile, PictureUploadRequest pictureUploadRequest, User loginUser) {
+        ThrowUtils.throwIf(loginUser == null, ErrorCode.NO_AUTH_ERROR);
+
+        Long pictureId = null;
+        if (pictureUploadRequest != null) {
+            pictureId = pictureUploadRequest.getId();
+        }
+
+        if (pictureId != null) {
+            boolean exists = this.lambdaQuery()
+                    .eq(Picture::getId, pictureId)
+                    .exists();
+            ThrowUtils.throwIf(!exists, ErrorCode.NOT_FOUND_ERROR, "图片不存在");
+        }
+
+
+        String uploadPathPrefix = String.format("public/%s", loginUser.getId());
+        UploadPictureResult uploadPictureResult = fileManager.uploadPicture(multipartFile, uploadPathPrefix);
+
+        Picture picture = new Picture();
+        picture.setUrl(uploadPictureResult.getUrl());
+        picture.setName(uploadPictureResult.getPicName());
+        picture.setPicSize(uploadPictureResult.getPicSize());
+        picture.setPicWidth(uploadPictureResult.getPicWidth());
+        picture.setPicHeight(uploadPictureResult.getPicHeight());
+        picture.setPicScale(uploadPictureResult.getPicScale());
+        picture.setPicFormat(uploadPictureResult.getPicFormat());
+        picture.setUserId(loginUser.getId());
+
+        if (pictureId != null) {
+
+            picture.setId(pictureId);
+            picture.setEditTime(new Date());
+        }
+        boolean result = this.saveOrUpdate(picture);
+        ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR, "图片上传失败");
+        return PictureVO.objToVo(picture);
     }
 
     @Override
