@@ -7,4 +7,9 @@
 /dataSources/
 /dataSources.local.xml
 # Custom
-application-local.yml
+application-test.yml
+
+target/classes/application-test.yml
+
+# 忽略本地环境配置
+src/main/resources/application-test.yml
