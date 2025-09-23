@@ -1,6 +1,7 @@
 com\yipi\yupicturebackend\service\PictureService.class
 com\yipi\yupicturebackend\exception\GlobalExceptionHandler.class
 com\yipi\yupicturebackend\model\dto\user\UserQueryRequest.class
+com\yipi\yupicturebackend\model\dto\picture\PictureReviewRequest.class
 com\yipi\yupicturebackend\constant\UserConstant.class
 com\yipi\yupicturebackend\model\enums\UserRoleEnum.class
 com\yipi\yupicturebackend\exception\ThrowUtils.class
@@ -9,6 +10,7 @@ com\yipi\yupicturebackend\model\dto\picture\PictureEditRequest.class
 com\yipi\yupicturebackend\model\dto\user\UserLoginRequest.class
 com\yipi\yupicturebackend\config\MyBatisPlusConfig.class
 com\yipi\yupicturebackend\manager\upload\FilePictureUpload.class
+com\yipi\yupicturebackend\model\enums\PictureReviewStatusEnum.class
 com\yipi\yupicturebackend\model\dto\picture\PictureQueryRequest.class
 com\yipi\yupicturebackend\model\dto\user\UserRegisterRequest.class
 com\yipi\yupicturebackend\model\vo\LoginUserVO.class

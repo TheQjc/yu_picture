@@ -1,7 +1,5 @@
 package com.yipi.yupicturebackend.controller;
 
-import cn.hutool.core.util.RandomUtil;
-import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yipi.yupicturebackend.annotation.AuthCheck;
@@ -12,30 +10,24 @@ import com.yipi.yupicturebackend.constant.UserConstant;
 import com.yipi.yupicturebackend.exception.BusinessException;
 import com.yipi.yupicturebackend.exception.ErrorCode;
 import com.yipi.yupicturebackend.exception.ThrowUtils;
-import com.yipi.yupicturebackend.model.dto.picture.PictureEditRequest;
-import com.yipi.yupicturebackend.model.dto.picture.PictureQueryRequest;
-import com.yipi.yupicturebackend.model.dto.picture.PictureUpdateRequest;
-import com.yipi.yupicturebackend.model.dto.picture.PictureUploadRequest;
+import com.yipi.yupicturebackend.model.dto.picture.*;
 import com.yipi.yupicturebackend.model.entity.Picture;
 import com.yipi.yupicturebackend.model.entity.User;
+import com.yipi.yupicturebackend.model.enums.PictureReviewStatusEnum;
 import com.yipi.yupicturebackend.model.vo.PictureTagCategory;
 import com.yipi.yupicturebackend.model.vo.PictureVO;
 import com.yipi.yupicturebackend.service.PictureService;
 import com.yipi.yupicturebackend.service.UserService;
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
-import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.time.Duration;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
  *
@@ -52,7 +44,6 @@ public class PictureController {
     private PictureService pictureService;
 
     @PostMapping("/upload")
-    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<PictureVO> uploadPicture(
             @RequestPart("file") MultipartFile multipartFile,
             PictureUploadRequest pictureUploadRequest,
@@ -85,7 +76,7 @@ public class PictureController {
 
     @PostMapping("/update")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
-    public BaseResponse<Boolean> updatePicture(@RequestBody PictureUpdateRequest pictureUpdateRequest) {
+    public BaseResponse<Boolean> updatePicture(@RequestBody PictureUpdateRequest pictureUpdateRequest, HttpServletRequest request) {
         if (pictureUpdateRequest == null || pictureUpdateRequest.getId() <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -100,6 +91,9 @@ public class PictureController {
         long id = pictureUpdateRequest.getId();
         Picture oldPicture = pictureService.getById(id);
         ThrowUtils.throwIf(oldPicture == null, ErrorCode.NOT_FOUND_ERROR);
+
+        User loginUser = userService.getLoginUser(request);
+        pictureService.fillReviewParams(picture, loginUser);
 
         boolean result = pictureService.updateById(picture);
         ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
@@ -150,6 +144,8 @@ public class PictureController {
 
         ThrowUtils.throwIf(size > 20, ErrorCode.PARAMS_ERROR);
 
+        pictureQueryRequest.setReviewStatus(PictureReviewStatusEnum.PASS.getValue());
+
         Page<Picture> picturePage = pictureService.page(new Page<>(current, size),
                 pictureService.getQueryWrapper(pictureQueryRequest));
 
@@ -181,6 +177,8 @@ public class PictureController {
             throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
         }
 
+        pictureService.fillReviewParams(picture, loginUser);
+
         boolean result = pictureService.updateById(picture);
         ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
         return ResultUtils.success(true);
@@ -194,5 +192,15 @@ public class PictureController {
         pictureTagCategory.setTagList(tagList);
         pictureTagCategory.setCategoryList(categoryList);
         return ResultUtils.success(pictureTagCategory);
+    }
+
+    @PostMapping("/review")
+    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
+    public BaseResponse<Boolean> doPictureReview(@RequestBody PictureReviewRequest pictureReviewRequest,
+                                                 HttpServletRequest request) {
+        ThrowUtils.throwIf(pictureReviewRequest == null, ErrorCode.PARAMS_ERROR);
+        User loginUser = userService.getLoginUser(request);
+        pictureService.doPictureReview(pictureReviewRequest, loginUser);
+        return ResultUtils.success(true);
     }
 }
