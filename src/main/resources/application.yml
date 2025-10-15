@@ -33,6 +33,7 @@ mybatis-plus:
 # 接口文档配置
 knife4j:
   enable: true
+  openapi3: true
   openapi:
     title: 接口文档
     version: 1.0
