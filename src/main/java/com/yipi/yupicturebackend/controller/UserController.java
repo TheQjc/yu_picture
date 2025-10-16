@@ -15,7 +15,6 @@ import com.yipi.yupicturebackend.model.vo.LoginUserVO;
 import com.yipi.yupicturebackend.model.vo.UserVO;
 import com.yipi.yupicturebackend.service.UserService;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -29,6 +28,12 @@ public class UserController {
     @Resource
     private UserService userService;
 
+
+    @GetMapping("/get/login")
+    public BaseResponse<LoginUserVO> getLoginUser(HttpServletRequest request) {
+        User loginUser = userService.getLoginUser(request);
+        return ResultUtils.success(userService.getLoginUserVO(loginUser));
+    }
 
     @PostMapping("/register")
     public BaseResponse<Long> userRegister(@RequestBody UserRegisterRequest userRegisterRequest) {

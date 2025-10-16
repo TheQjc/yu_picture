@@ -34,4 +34,6 @@ public interface UserService extends IService<User> {
     List<UserVO> getUserVOList(List<User> records);
 
     boolean isAdmin(User loginUser);
+
+    LoginUserVO getLoginUserVO(User loginUser);
 }
